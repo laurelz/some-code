@@ -107,9 +107,56 @@ void isPrimeAdv(int start, int end) {
 	}
 	cout<<endl;
 }
+
+
+// 求连续子数组的最大和，并返回最大和，以及最大的连续子数组
+// 不考虑数组元素全为负数的情况（此时只需求出数组的最大值）
+int getMaxSub(vector<int> &input,vector<int> &output) {
+	// 排除异常情况
+    if (input.size() <= 0 ) return -1;
+	// 建立一个临时数组，保存当前的连续子数组tmp
+	// 维护一个临时变量，保存当前的连续子数组和tmpSub
+	// 建立一个结果变量，保存当前的最大连续子数组和maxSub
+	vector<int>tmp;
+	int tmpSub = input[0];
+	int maxSub = input[0];
+	output.push_back(input[0]);
+	tmp.push_back(input[0]);
+
+	for(int i = 1; i < input.size();i++) {
+		// 首先把当前元素累加到tmpSub和tmp中
+	    tmpSub += input[i];
+		tmp.push_back(input[i]);
+		if (tmpSub <= 0) {
+			// 若当前连续子数组的和小于零，说明到达了拐点
+			// 该子数组与之后的元素之和永远小于后面元素
+			// 即当前子数组的元素均为无效元素
+			// 此时需将当前连续子数组的和置为零，数组清空
+			tmpSub = 0;
+			tmp.clear();
+		}
+		if (tmpSub > maxSub) {
+			// 若当前连续子数组的和大于当前最大和
+			// 将最大和更新为当前连续子数组的和
+			// 并将output的旧值清除，把当前的连续子数组作为新值
+			// 通过调用assign()函数实现旧值的删除和新值的复制
+			maxSub = tmpSub;
+			output.assign(tmp.begin(),tmp.end());
+		}
+	}
+	return maxSub;
+}
+
 int main() {
     int n = 423;
-	isnPrime(101,n);
-	isNPrime(101,n);
-	isPrimeAdv(101,n);
+    int array[] = {1,-2,3,10,-4,7,2,-5};
+    vector<int> va(array,array+7);
+    vector<int> vb;
+    cout<<getMaxSub(va,vb)<<endl;
+    for(int i = 0; i < vb.size();i++)
+	cout<<vb[i]<<" ";
+    cout<<endl;
+    isnPrime(101,n);
+    isNPrime(101,n);
+    isPrimeAdv(101,n);
 }
