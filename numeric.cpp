@@ -108,7 +108,6 @@ void isPrimeAdv(int start, int end) {
 	cout<<endl;
 }
 
-
 // 求连续子数组的最大和，并返回最大和，以及最大的连续子数组
 // 不考虑数组元素全为负数的情况（此时只需求出数组的最大值）
 int getMaxSub(vector<int> &input,vector<int> &output) {
@@ -147,9 +146,71 @@ int getMaxSub(vector<int> &input,vector<int> &output) {
 	return maxSub;
 }
 
+
+// 在一个数组中，只有一个元素只出现一次，其他元素都出现两次
+// 找出这个只出现一次的元素
+int getSingleNum(int array[],int len) {
+	int res = array[0];
+	for (int i = 1; i < len; ++i) {
+	    res ^= array[i];
+	}
+	return res;
+}
+
+// 在一个数组中，只有两个元素只出现一次，其他元素都出现两次
+// 找出这两个只出现一次的元素
+// 基于getSingleNum()，可以将这两个数分别置于两个数组中
+// 保证每一个数组中，只有一个出现一次的元素，其余均出现两次
+// 所以，要求出一个临界值，来将原来的元素分成两类
+void getTwoSingleNum(int output[], int array[], int len) {
+    int tmp = array[0];
+	int res1, res2;
+	int num1, num2;
+	vector<int> v1, v2;
+	// 首先把数组所有元素都做异或运算
+	// 得到的结果即为要求的两个元素的异或结果
+	// 这个异或结果tmp肯定不为零（因为二者不相同）
+	// 所以tmp的二进制表示中肯定有某一位为1
+	// 相应的，要求的两个元素也能保证，
+	// 其中一个对应位为0,另一个对应位为1
+	for (int i = 1; i < len; ++i) {
+	    tmp ^= array[i];
+	}
+	num1 = 1;
+	num2 = 0;
+	// 找到tmp结果中倒数第一个为1的位，获取该二进制结果
+	while(1) {
+	    num2 = tmp & num1;
+		// 若num2不为零，说明tmp在num1的二进制为1的那一位也为1
+		if (num2 != 0)
+			break;
+		num1 = num1<<1;
+	}
+	// 把数组分为两部分，一部分对应位为1,另一部分对应位不为1
+	// 其中,要求的两个数，必然是一个对应位为1,另一个对应位为0
+	// 因此，每一个数组都只有一个出现一次的元素，其他出现两次
+	for( int i = 0; i < len; ++i) {
+	    if (num1 & array[i])
+			v1.push_back(array[i]);
+		else
+			v2.push_back(array[i]);
+	}
+	// 此时分别把两个数组的所有元素进行异或运算，得到两个非零值
+	res1 = v1[0];
+	res2 = v2[0];
+	for( int i = 1; i < v1.size(); ++i)
+		res1 ^= v1[i];
+	for( int i = 1; i < v2.size(); ++i)
+		res2 ^= v2[i];
+	output[0] = res1;
+	output[1] = res2;
+}
+
 int main() {
     int n = 423;
     int array[] = {1,-2,3,10,-4,7,2,-5};
+    int array1[] = {1,6,5,2,1,6,9,4,2,4};
+    int output[2];
     vector<int> va(array,array+7);
     vector<int> vb;
     cout<<getMaxSub(va,vb)<<endl;
@@ -159,4 +220,6 @@ int main() {
     isnPrime(101,n);
     isNPrime(101,n);
     isPrimeAdv(101,n);
+    getTwoSingleNum(output,array1,10);
+    cout<<output[0] <<" "<<output[1]<<endl;
 }
