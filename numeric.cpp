@@ -257,6 +257,35 @@ int getNumTimes(int array[], int length, int k) {
 	    return end - start + 1;
 	return 0;
 }
+
+void printVal(int start, int end) {
+    for(int i = start; i <= end; ++i)
+		cout<<i<<" ";
+	cout<<endl;
+}
+void printContinousSequence(int key) {
+    if (key <3) return;
+	int start = 1; 
+	int end = 2;
+	int mid = (key + 1) >> 1;
+	int curSum = start + end;
+
+	while(start < mid && start >0) {
+	    if (curSum == key) {
+			printVal(start,end);
+			curSum -= start;
+			++start;
+		}
+		if (curSum < key) {
+		    ++end;
+			curSum += end;
+		}
+		else {
+			curSum -= start;
+			++start;
+		}
+	}
+}
 int main() {
     int n = 423;
 	int array[] = {1,-2,3,10,-4,7,2,-5};
@@ -277,4 +306,5 @@ int main() {
 		cout<<output[i]<<" ";
 	cout<<endl;
 	cout<<getNumTimes(arrayb,4,3)<<endl;
+	printContinousSequence(5);
 }
