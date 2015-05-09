@@ -1,5 +1,6 @@
 #include<iostream>
 using namespace std;
+#include<vector>
 
 // 求一个数是否为素数
 // 素数是 因子只有1和本身的数
@@ -146,7 +147,6 @@ int getMaxSub(vector<int> &input,vector<int> &output) {
 	return maxSub;
 }
 
-
 // 在一个数组中，只有一个元素只出现一次，其他元素都出现两次
 // 找出这个只出现一次的元素
 int getSingleNum(int array[],int len) {
@@ -206,20 +206,75 @@ void getTwoSingleNum(int output[], int array[], int len) {
 	output[1] = res2;
 }
 
+/* 计算排序数组中，某个元素的出现次数*/
+int calcuFirstNum(int array[], int start, int end, int num) {
+    if (start > end) return -1;
+	int midIndex = (start + end) >> 1;
+	int midData = array[midIndex];
+	
+	if (midData == num ){
+		// 若下标为0,或者下标不为零且该元素的前一个元素不为num
+	    if (midIndex == 0 || (midIndex > 0 && array[midIndex-1] != num))
+			return midIndex;
+		else
+		    // 否则说明该元素前面还有相同元素，应向前搜索
+			end = midIndex - 1;
+	}
+	else if (midData < num) 
+	    start = midIndex + 1;
+	else
+	    end = midIndex - 1;
+	return calcuFirstNum(array, start, end, num);
+}
+
+int calcuLastNum(int array[], int length, int start, int end, int num) {
+    if (start > end) return -1;
+	int midIndex = (start + end) >> 1;
+	int midData = array[midIndex];
+
+	if (midData == num) {
+	    // 若当前元素为末尾元素，或这不为末尾元素且其后一个元素不为num
+	    if (midIndex == length-1 || (midIndex < length -1 && 
+				array[midIndex+1] != num))
+			return midIndex;
+		else 
+		    // 否则说明该元素后面还有相同元素，应向后搜索
+		    start = midIndex + 1;
+	}
+	else if (midData < num)
+	    start = midIndex + 1;
+	else
+	    end = midIndex - 1;
+	return calcuLastNum(array, length, start, end, num);
+}
+
+int getNumTimes(int array[], int length, int k) {
+    if (array == NULL || length <= 0)
+	    return 0;
+	int start = calcuFirstNum(array, 0, length - 1, k);
+	int end = calcuLastNum(array, length, 0, length - 1, k);
+	if (start != -1 && end != -1)
+	    return end - start + 1;
+	return 0;
+}
 int main() {
     int n = 423;
-    int array[] = {1,-2,3,10,-4,7,2,-5};
-    int array1[] = {1,6,5,2,1,6,9,4,2,4};
-    int output[2];
-    vector<int> va(array,array+7);
-    vector<int> vb;
-    cout<<getMaxSub(va,vb)<<endl;
-    for(int i = 0; i < vb.size();i++)
-	cout<<vb[i]<<" ";
-    cout<<endl;
-    isnPrime(101,n);
-    isNPrime(101,n);
-    isPrimeAdv(101,n);
-    getTwoSingleNum(output,array1,10);
-    cout<<output[0] <<" "<<output[1]<<endl;
+	int array[] = {1,-2,3,10,-4,7,2,-5};
+	int arraya[] = {1,6,5,2,1,6,9,4,2,4};
+	int arrayb[] = {1,2,3,3,3,3,3,4,6};
+	int output[2];
+	vector<int> va(array,array+7);
+	vector<int> vb;
+	cout<<getMaxSub(va,vb)<<endl;
+	for(int i = 0; i < vb.size();i++)
+		cout<<vb[i]<<" ";
+	cout<<endl;
+	isnPrime(101,n);
+	isNPrime(101,n);
+	isPrimeAdv(101,n);
+	getTwoSingleNum(output,arraya,10);
+	for(int i = 0; i < 2; i++)
+		cout<<output[i]<<" ";
+	cout<<endl;
+	cout<<getNumTimes(arrayb,4,3)<<endl;
 }
