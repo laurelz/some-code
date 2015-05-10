@@ -286,6 +286,49 @@ void printContinousSequence(int key) {
 		}
 	}
 }
+// 在旋转递增数组中找到最小值
+// eg. 0124567 ; 4567012
+// 返回值均为0
+// 使用二分法，O(logn)
+int findMin(vector<int>& nums) {
+    if (nums.size() <= 0)
+        return -1;
+    int start = 0; 
+    int end = nums.size() - 1;
+     
+    // 把mid初始化为start，当递增数组旋转0个元素时（原递增数组）
+    // 此时最小值即为start，且不满足循环条件 start元素 > end元素
+    // 可以直接返回mid（start）元素
+    int mid = start;
+    // 当start元素大于end元素时（旋转后的递增时）循环
+    while (nums[start] > nums[end]) {
+           
+        //若start和end是两个相连的元素，此时返回end即可
+        if (end - start == 1)
+            return nums[end];
+              
+        mid = (start + end) >> 1;
+        if (nums[mid] > nums[start]) {
+            // 说明mid处于递增数组中
+            // 若mid的后一个元素小于mid，说明mid后一个元素在递减数组中
+            // 并且是递减数组的第一个元素，该元素即为最小值
+            if (nums[mid+1] < nums[mid])
+                return nums[mid+1];
+            // 此时mid大于start，肯定也大于end，所以start指针应指向mid
+            start = mid;
+        }
+        else {
+            // 说明mid处于递减数组中
+            // 若mid的前一个元素大于mid，说明mid前一个元素在递增数组中
+            // 并且是递增数组的最后一个元素，则mid即为最小值
+            if (nums[mid-1] > nums[mid])
+                return nums[mid];
+            // 若mid的前一个元素不大于mid，说明它也处于递减数组中
+            end = mid;
+        }
+    }
+    return nums[mid];
+}
 int main() {
     int n = 423;
 	int array[] = {1,-2,3,10,-4,7,2,-5};
