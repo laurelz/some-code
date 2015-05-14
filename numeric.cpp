@@ -329,6 +329,19 @@ int findMin(vector<int>& nums) {
     }
     return nums[mid];
 }
+
+int singleNumber(vector<int>& nums) {
+        int one = 0, two = 0, three = 0;
+        for(int i = 0; i < nums.size(); ++i) {
+            two |= one & nums[i];
+            one ^= nums[i];
+            three = one & two;
+            one &= ~three;
+            two &= ~three;
+        }
+        return one;
+    }
+    
 int main() {
     int n = 423;
 	int array[] = {1,-2,3,10,-4,7,2,-5};
