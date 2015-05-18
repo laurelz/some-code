@@ -341,7 +341,25 @@ int singleNumber(vector<int>& nums) {
         }
         return one;
     }
-    
+   
+   int minPathSum(vector<vector<int>>& grid) {
+        if (grid.size() <= 0) return -1;
+        int x = grid.size();
+        int y = grid[0].size();
+        
+        vector<vector<int> > res(grid);
+        
+        for (int i = 0; i < x; ++i) {
+            for (int j = 0; j < y; ++j) {
+                int numa = 0,numb= 0;
+                if (i >= 1) numa = res[i-1][j];
+                if (j >= 1) numb = res[i][j-1];
+                res[i][j] = min(numa,numb) + grid[i][j];
+            }
+        }
+        return res[x-1][y-1];
+    }
+    //？？？？
 int main() {
     int n = 423;
 	int array[] = {1,-2,3,10,-4,7,2,-5};
