@@ -330,6 +330,11 @@ int findMin(vector<int>& nums) {
     return nums[mid];
 }
 
+// 使用O(n)时间复杂度，和O(1)空间复杂度，找出数组中只出现一次的元素
+// 数组中的其他元素均出现三次。不能使用直接异或，不能求出结果
+// 使用三个掩码，记录出现次数为x%3 = 1, 2, 0 的位数，最后输出出现次数为1的掩码值
+// 即，从整数的32位的每一位出发，统计每一位出现的次数，若最终出现的次数x%3=1
+// 说明这些位组成的int值是数组中只出现一次的元素
 int singleNumber(vector<int>& nums) {
         int one = 0, two = 0, three = 0;
         for(int i = 0; i < nums.size(); ++i) {
@@ -342,6 +347,11 @@ int singleNumber(vector<int>& nums) {
         return one;
     }
    
+   // leetcode 64 Minimum Path Sum
+   // 使用动态规划，计算从左到右的最短路径
+   // 每一步只能向下或者向右
+   // 递推公式：res[i][j] = min(res[i][j-1],res[i-1][j]) + grid[i][j];
+   // Note:需要初始化i=0的一行和j=0的一列
    int minPathSum(vector<vector<int>>& grid) {
         if (grid.size() <= 0) return -1;
         int x = grid.size();
@@ -349,17 +359,17 @@ int singleNumber(vector<int>& nums) {
         
         vector<vector<int> > res(grid);
         
-        for (int i = 0; i < x; ++i) {
-            for (int j = 0; j < y; ++j) {
-                int numa = 0,numb= 0;
-                if (i >= 1) numa = res[i-1][j];
-                if (j >= 1) numb = res[i][j-1];
-                res[i][j] = min(numa,numb) + grid[i][j];
+        for (int i = 0,j = 1; j < y; ++j)
+            res[i][j] += res[i][j-1];
+        for (int i = 1,j = 0;i < x; ++i)
+            res[i][j] += res[i-1][j];
+        for (int i = 1; i < x; ++i) {
+            for (int j =1; j < y; ++j) {
+                res[i][j] = min(res[i-1][j],res[i][j-1]) + grid[i][j];
             }
         }
         return res[x-1][y-1];
     }
-    //？？？？
 int main() {
     int n = 423;
 	int array[] = {1,-2,3,10,-4,7,2,-5};
