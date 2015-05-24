@@ -21,4 +21,6 @@
 
 10.两种方法实现判断一棵树是否为平衡树（左右字节点的高度差不大于1），基于递归实现，TreeDepth.cpp。
 
-11.判断一个数字是否是Happy Number（leetcode 202）
+11.（leetcode 202）判断一个数字是否是Happy Number
+
+12.（leetcode 6）将输入的一行string转化为按照N行呈zigzag（锯齿型）排列的string，并按行拼接后输出
